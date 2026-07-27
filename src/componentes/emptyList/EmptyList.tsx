@@ -5,7 +5,7 @@ const EmptyList = () => {
 	return (
 		<Container>
 			<Image src={logoIcon} />
-			<Label>Adicione uma categoria de começe a usar!</Label>
+			<Label>Adicione uma categoria e começe a usar!</Label>
 		</Container>
 	);
 };
