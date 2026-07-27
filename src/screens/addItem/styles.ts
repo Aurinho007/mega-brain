@@ -15,10 +15,10 @@ export const Container = styled.div<ContainerProps>`
 	opacity: ${({ $show }) => ($show ? 1 : 0)};
 	pointer-events: ${({ $show }) => ($show ? 'auto' : 'none')};
 	transition: opacity 0.25s ease;
+	z-index: 999;
 `;
 
 export const Content = styled.div<ContainerProps>`
-	z-index: 999;
 	position: absolute;
 	display: flex;
 	flex-direction: column;
