@@ -10,6 +10,7 @@ export const Container = styled.div`
 	top: 0;
 	width: 100%;
 	height: 105px;
+	z-index: 99;
 
 	&::after {
 		content: '';

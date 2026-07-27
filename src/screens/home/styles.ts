@@ -9,13 +9,18 @@ export const Container = styled.div`
 `;
 
 export const Title = styled.text`
+	z-index: 99;
 	font-size: 30px;
 	color: ${colors.title};
 	margin-bottom: 24px;
 	position: fixed;
 	font-weight: ${fontsWeight.black};
+	background-color: ${colors.default};
+	width: 100%;
+	padding-bottom: 10px;
 `;
 
 export const Content = styled.div`
 	padding-top: 60px;
+	margin-bottom: 250px;
 `;

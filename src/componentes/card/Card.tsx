@@ -47,6 +47,18 @@ const Card = (props: CardProps) => {
 		}
 	};
 
+	const handleRestart = (event?: MouseEvent<HTMLButtonElement>) => {
+		event?.stopPropagation();
+		setShowMenu(false);
+
+		const confirmed = window.confirm('Deseja reiniciar este item?');
+
+		if (confirmed) {
+			Service.editItem(id, 0);
+			setRefresh(true);
+		}
+	};
+
 	const getPercent = () => {
 		const percent = (used / total) * 100;
 
@@ -69,6 +81,13 @@ const Card = (props: CardProps) => {
 								}}
 							>
 								Apagar
+							</ActionOption>
+							<ActionOption
+								onClick={(event) => {
+									handleRestart(event);
+								}}
+							>
+								Reiniciar
 							</ActionOption>
 						</ActionMenu>
 					)}

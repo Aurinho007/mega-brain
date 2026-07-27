@@ -24,10 +24,10 @@ const AddItem = ({ show, setShow, setRefresh }: AddItemProps) => {
 	const [total, setTotal] = useState<string>('');
 
 	const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const formattedName = event.target.value
-			.trim()
+		const rawValue = event.target.value;
+		const formattedName = rawValue
 			.replace(/\s+/g, ' ')
-			.replace(/\b\w/g, (char) => char.toUpperCase());
+			.replace(/(^|\s)\S/g, (char) => char.toUpperCase());
 
 		setName(formattedName);
 	};
@@ -40,10 +40,15 @@ const AddItem = ({ show, setShow, setRefresh }: AddItemProps) => {
 	const handlePressAddItem = () => {
 		const newItem: ICard = {
 			id: uuidv4(),
-			name,
+			name: name.trim(),
 			total: Number(total),
 			used: 0,
 		};
+
+		if (!name || !total) {
+			alert('Preencha todos os campos');
+			return;
+		}
 
 		const addedItem = Service.createItem(newItem);
 		setRefresh(true);
