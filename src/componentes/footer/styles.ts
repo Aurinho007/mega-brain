@@ -9,8 +9,16 @@ export const Container = styled.div`
 	bottom: 0;
 	width: 100%;
 	justify-content: center;
-	height: 110px;
 	box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.12);
 	padding-top: 20px;
+	padding-bottom: 40px;
 	background-color: ${colors.default};
+`;
+
+export const ButtonGroup = styled.div`
+	display: flex;
+	width: 100%;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
 `;

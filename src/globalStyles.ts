@@ -1,6 +1,7 @@
 import { createGlobalStyle } from 'styled-components';
 import regularFont from '../assets/fonts/Hanken_Grotesk/static/HankenGrotesk-Regular.ttf';
 import boldFont from '../assets/fonts/Hanken_Grotesk/static/HankenGrotesk-Bold.ttf';
+import { colors } from './constants';
 
 export const GlobalStyles = createGlobalStyle`
   @font-face {
@@ -77,6 +78,7 @@ export const GlobalStyles = createGlobalStyle`
     line-height: 1;
     overflow-x: hidden;
     font-family: 'Hanken Grotesk';
+    background-color: ${colors.default};
   }
 
   #root {

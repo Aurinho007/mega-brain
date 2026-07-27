@@ -1,6 +1,9 @@
-import { useCallback } from 'react';
-import { Card } from '../../types';
+import { useCallback, useState, type MouseEvent } from 'react';
+import Service from '../../service';
+import { ICard } from '../../types';
 import {
+	ActionMenu,
+	ActionOption,
 	Bar,
 	Container,
 	FillBar,
@@ -15,8 +18,15 @@ import {
 	ValueContinerRight,
 } from './styles';
 
-const Card = (card: Card) => {
-	const { id, name, total, used } = card;
+type CardProps = {
+	card: ICard;
+	setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const Card = (props: CardProps) => {
+	const { id, name, total, used } = props.card;
+	const { setRefresh } = props;
+	const [showMenu, setShowMenu] = useState(false);
 
 	const formatValue = useCallback((value: number) => {
 		return new Intl.NumberFormat('pt-BR', {
@@ -25,11 +35,44 @@ const Card = (card: Card) => {
 		}).format(value);
 	}, []);
 
+	const handleDelete = (event?: MouseEvent<HTMLButtonElement>) => {
+		event?.stopPropagation();
+		setShowMenu(false);
+
+		const confirmed = window.confirm('Deseja apagar este item?');
+
+		if (confirmed) {
+			Service.deleteItem(id);
+			setRefresh(true);
+		}
+	};
+
+	const getPercent = () => {
+		const percent = (used / total) * 100;
+
+		if (percent > 100) return 100;
+
+		return percent;
+	};
+
 	return (
 		<Container>
 			<Header>
 				<Title>{name}</Title>
-				<Menu>...</Menu>
+				<div style={{ position: 'relative' }}>
+					<Menu onClick={() => setShowMenu((prev) => !prev)}>...</Menu>
+					{showMenu && (
+						<ActionMenu>
+							<ActionOption
+								onClick={(event) => {
+									handleDelete(event);
+								}}
+							>
+								Apagar
+							</ActionOption>
+						</ActionMenu>
+					)}
+				</div>
 			</Header>
 			<Line>
 				<ValueContinerLeft>
@@ -42,7 +85,7 @@ const Card = (card: Card) => {
 				</ValueContinerRight>
 			</Line>
 			<Bar>
-				<FillBar conclusionPercent={(used / total) * 100}></FillBar>
+				<FillBar conclusionPercent={getPercent()}></FillBar>
 			</Bar>
 			<Legend>{`Total: ${formatValue(total)}`}</Legend>
 		</Container>

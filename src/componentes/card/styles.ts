@@ -6,6 +6,7 @@ export const Container = styled.div`
 	border-radius: 10px;
 	padding: 12px;
 	padding-bottom: 24px;
+	margin-bottom: 20px;
 `;
 
 export const Header = styled.div`
@@ -22,12 +23,42 @@ export const Title = styled.text`
 	padding-top: 6px;
 `;
 
-export const Menu = styled.text`
+export const Menu = styled.button`
 	color: ${colors.label};
 	font-weight: ${fontsWeight.black};
 	font-size: 30px;
 	transform: rotate(270deg);
 	margin-top: -5px;
+	background: transparent;
+	border: none;
+	cursor: pointer;
+`;
+
+export const ActionMenu = styled.div`
+	position: absolute;
+	right: 0;
+	top: 36px;
+	background-color: ${colors.default};
+	border-radius: 8px;
+	padding: 8px 0;
+	min-width: 100px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+	z-index: 10;
+`;
+
+export const ActionOption = styled.button`
+	width: 100%;
+	text-align: left;
+	padding: 8px 12px;
+	background: transparent;
+	border: none;
+	color: ${colors.secondary};
+	font-weight: ${fontsWeight.medium};
+	cursor: pointer;
+
+	&:hover {
+		background-color: ${colors.paragraph};
+	}
 `;
 
 export const Line = styled.div`
