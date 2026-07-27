@@ -81,7 +81,7 @@ const AddItem = ({ show, setShow, setRefresh }: AddItemProps) => {
 				</FormItemContainer>
 
 				<FormItemContainer>
-					<FormItemLabel>Valor limite mensal (R$)</FormItemLabel>
+					<FormItemLabel>Valor do limite mensal (R$)</FormItemLabel>
 					<FormItem value={total} onChange={handleTotalChange} type="tel" inputMode="numeric" />
 				</FormItemContainer>
 
