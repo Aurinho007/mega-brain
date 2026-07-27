@@ -66,8 +66,8 @@ const AddSpent = ({ show, setShow, setRefresh }: AddSpentProps) => {
 	};
 
 	return (
-		<Container $show={show}>
-			<Content $show={show}>
+		<Container $show={show} onClick={handlePressGoBack}>
+			<Content $show={show} onClick={(event) => event.stopPropagation()}>
 				<Title>Adicionar gasto</Title>
 
 				<FormItemContainer>

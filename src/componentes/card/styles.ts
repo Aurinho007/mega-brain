@@ -51,10 +51,10 @@ export const ActionOption = styled.button`
 	text-align: left;
 	padding: 8px 12px;
 	background: transparent;
-	border: none;
 	color: ${colors.secondary};
 	font-weight: ${fontsWeight.medium};
 	cursor: pointer;
+	font-size: 15px;
 
 	&:hover {
 		background-color: ${colors.paragraph};

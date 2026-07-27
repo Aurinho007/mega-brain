@@ -71,8 +71,8 @@ const AddItem = ({ show, setShow, setRefresh }: AddItemProps) => {
 	};
 
 	return (
-		<Container $show={show}>
-			<Content $show={show}>
+		<Container $show={show} onClick={handlePressGoBack}>
+			<Content $show={show} onClick={(event) => event.stopPropagation()}>
 				<Title>Adicionar categoria</Title>
 
 				<FormItemContainer>

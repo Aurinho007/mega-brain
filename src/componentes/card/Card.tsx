@@ -1,4 +1,10 @@
-import { useCallback, useState, type MouseEvent } from 'react';
+import {
+	useCallback,
+	useEffect,
+	useRef,
+	useState,
+	type MouseEvent as ReactMouseEvent,
+} from 'react';
 import Service from '../../service';
 import { ICard } from '../../types';
 import {
@@ -27,6 +33,7 @@ const Card = (props: CardProps) => {
 	const { id, name, total, used } = props.card;
 	const { setRefresh } = props;
 	const [showMenu, setShowMenu] = useState(false);
+	const menuRef = useRef<HTMLDivElement>(null);
 
 	const formatValue = useCallback((value: number) => {
 		return new Intl.NumberFormat('pt-BR', {
@@ -35,7 +42,23 @@ const Card = (props: CardProps) => {
 		}).format(value);
 	}, []);
 
-	const handleDelete = (event?: MouseEvent<HTMLButtonElement>) => {
+	useEffect(() => {
+		if (!showMenu) return;
+
+		const handleClickOutside = (event: MouseEvent) => {
+			if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+				setShowMenu(false);
+			}
+		};
+
+		document.addEventListener('mousedown', handleClickOutside);
+
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside);
+		};
+	}, [showMenu]);
+
+	const handleDelete = (event?: ReactMouseEvent<HTMLButtonElement>) => {
 		event?.stopPropagation();
 		setShowMenu(false);
 
@@ -47,7 +70,7 @@ const Card = (props: CardProps) => {
 		}
 	};
 
-	const handleRestart = (event?: MouseEvent<HTMLButtonElement>) => {
+	const handleRestart = (event?: ReactMouseEvent<HTMLButtonElement>) => {
 		event?.stopPropagation();
 		setShowMenu(false);
 
@@ -71,7 +94,7 @@ const Card = (props: CardProps) => {
 		<Container>
 			<Header>
 				<Title>{name}</Title>
-				<div style={{ position: 'relative' }}>
+				<div ref={menuRef} style={{ position: 'relative' }}>
 					<Menu onClick={() => setShowMenu((prev) => !prev)}>...</Menu>
 					{showMenu && (
 						<ActionMenu>
