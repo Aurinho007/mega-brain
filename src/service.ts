@@ -21,6 +21,20 @@ class Service {
 		return true;
 	};
 
+	static resetItem = (id: string): boolean => {
+		const categories = this.getAllItens();
+		const index = categories.findIndex((item) => item.id === id);
+
+		if (index === -1) {
+			return false;
+		}
+
+		categories[index].used = 0;
+		this._setAllItens(categories);
+
+		return true;
+	};
+
 	static createItem = (item: ICard): boolean => {
 		const categories = this.getAllItens();
 		const index = categories.findIndex((i) => i.name === item.name);

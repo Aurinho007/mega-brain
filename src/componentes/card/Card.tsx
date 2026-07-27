@@ -54,7 +54,7 @@ const Card = (props: CardProps) => {
 		const confirmed = window.confirm('Deseja reiniciar este item?');
 
 		if (confirmed) {
-			Service.editItem(id, 0);
+			Service.resetItem(id);
 			setRefresh(true);
 		}
 	};
