@@ -46,8 +46,8 @@ export const LogoContainer = styled.div`
 `;
 
 export const Logo = styled.img`
-	width: 40px;
-	height: 40px;
+	width: 35px;
+	height: 35px;
 `;
 
 export const TitleContainer = styled.div`
