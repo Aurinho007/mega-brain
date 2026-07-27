@@ -1,5 +1,5 @@
 import { Container, Content, Logo, LogoContainer, SubTitle, Title, TitleContainer } from './styles';
-import logoIcon from '../../assets/images/logoIcon.png';
+import logoIcon from '../../../assets/images/logoIcon.png';
 
 const Header = () => {
 	return (
