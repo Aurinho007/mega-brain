@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { colors, fonts } from '../../constants';
+import { colors, fontsWeight } from '../../constants';
 
 export const Container = styled.div`
 	background-color: ${colors.primary};
@@ -30,9 +30,7 @@ export const Container = styled.div`
 
 export const Content = styled.div`
 	display: flex;
-	width: 100%;
-	justify-content: space-between;
-	padding: 12px 8%;
+	padding: 12px 25px;
 `;
 
 export const LogoContainer = styled.div`
@@ -54,17 +52,17 @@ export const Logo = styled.img`
 export const TitleContainer = styled.div`
 	display: flex;
 	flex-direction: column;
-	text-align: right;
+	text-align: left;
+	padding-left: 15px;
+	padding-top: 6px;
 `;
 
 export const Title = styled.text`
-	font-family: ${fonts.primary};
-	font-weight: 800;
 	font-size: 23px;
+	font-weight: ${fontsWeight.black};
 `;
 
 export const SubTitle = styled.text`
-	font-family: ${fonts.primary};
-	font-weight: 200;
 	font-size: 18px;
+	font-weight: ${fontsWeight.light};
 `;

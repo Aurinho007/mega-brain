@@ -19,6 +19,14 @@ export const colors = {
 	secondary: _colors.black,
 };
 
-export const fonts = {
-	primary: 'Hanken Grotesk, sans-serif',
+export const fontsWeight = {
+	thin: 100,
+	extraLight: 200,
+	light: 300,
+	regular: 400,
+	medium: 500,
+	semiBold: 600,
+	bold: 700,
+	extraBold: 800,
+	black: 900,
 };

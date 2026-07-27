@@ -1,8 +1,27 @@
 import { createGlobalStyle } from 'styled-components';
+import regularFont from '../assets/fonts/Hanken_Grotesk/static/HankenGrotesk-Regular.ttf';
+import boldFont from '../assets/fonts/Hanken_Grotesk/static/HankenGrotesk-Bold.ttf';
 
 export const GlobalStyles = createGlobalStyle`
+  @font-face {
+    font-family: 'Hanken Grotesk';
+    src: url(${regularFont}) format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Hanken Grotesk';
+    src: url(${boldFont}) format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+
   * {
     box-sizing: border-box;
+    font-family: inherit;
   }
 
   /* Reseta os estilos padrões */
@@ -57,7 +76,7 @@ export const GlobalStyles = createGlobalStyle`
     padding: 0;
     line-height: 1;
     overflow-x: hidden;
-
+    font-family: 'Hanken Grotesk';
   }
 
   #root {

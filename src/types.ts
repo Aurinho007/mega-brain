@@ -1,6 +1,6 @@
-export type Category = {
-    id: number;
-    limit: number;
-    used: number;
-    name: string;
-}
+export type Card = {
+	id: number;
+	name: string;
+	total: number;
+	used: number;
+};
