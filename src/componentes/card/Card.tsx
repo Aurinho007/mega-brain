@@ -45,7 +45,7 @@ const currencyFormatter = new Intl.NumberFormat('pt-BR', {
 	maximumFractionDigits: 2,
 });
 
-const getStatus = (percent: number): StatusLevel => {
+export const getStatus = (percent: number): StatusLevel => {
 	if (percent >= 100) return 'danger';
 	if (percent >= 75) return 'warning';
 	return 'success';

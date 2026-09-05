@@ -9,16 +9,25 @@ import {
 	Container,
 	Content,
 	PageHeader,
+	SummaryBar,
 	SummaryCard,
-	SummaryItem,
+	SummaryFillBar,
+	SummaryFooter,
+	SummaryFooterItem,
+	SummaryHeader,
+	SummaryHeaderText,
+	SummaryIconBadge,
 	SummaryLabel,
+	SummaryPercentTag,
+	SummaryTitleGroup,
+	SummaryTotalValue,
 	SummaryValue,
 	Title,
 	Toolbar,
 } from './styles';
-import Card from '../../componentes/card/Card';
+import Card, { getStatus } from '../../componentes/card/Card';
 import Button from '../../componentes/button/Button';
-import { PlusIcon, ReceiptIcon } from '../../componentes/icons/Icons';
+import { PlusIcon, ReceiptIcon, WalletIcon } from '../../componentes/icons/Icons';
 import { ICard } from '../../types';
 import AddSpent from '../addSpent/AddSpent';
 
@@ -50,11 +59,15 @@ const Home = () => {
 	const summary = useMemo(() => {
 		const totalLimit = allCards.reduce((acc, card) => acc + card.total, 0);
 		const totalUsed = allCards.reduce((acc, card) => acc + card.used, 0);
+		const rawPercent = totalLimit > 0 ? (totalUsed / totalLimit) * 100 : 0;
 
 		return {
 			totalLimit,
 			totalUsed,
 			totalAvailable: Math.max(totalLimit - totalUsed, 0),
+			percent: Math.min(Math.max(rawPercent, 0), 100),
+			rawPercent,
+			status: getStatus(rawPercent),
 		};
 	}, [allCards]);
 
@@ -68,20 +81,37 @@ const Home = () => {
 		return (
 			<>
 				<SummaryCard aria-label="Resumo geral">
-					<SummaryItem>
-						<SummaryLabel>Limite total</SummaryLabel>
-						<SummaryValue>{currencyFormatter.format(summary.totalLimit)}</SummaryValue>
-					</SummaryItem>
-					<SummaryItem>
-						<SummaryLabel>Utilizado</SummaryLabel>
-						<SummaryValue $tone="danger">{currencyFormatter.format(summary.totalUsed)}</SummaryValue>
-					</SummaryItem>
-					<SummaryItem>
-						<SummaryLabel>Disponível</SummaryLabel>
-						<SummaryValue $tone="success">
-							{currencyFormatter.format(summary.totalAvailable)}
-						</SummaryValue>
-					</SummaryItem>
+					<SummaryHeader>
+						<SummaryTitleGroup>
+							<SummaryIconBadge $status={summary.status}>
+								<WalletIcon size={18} />
+							</SummaryIconBadge>
+							<SummaryHeaderText>
+								<SummaryLabel>Limite total</SummaryLabel>
+								<SummaryTotalValue>{currencyFormatter.format(summary.totalLimit)}</SummaryTotalValue>
+							</SummaryHeaderText>
+						</SummaryTitleGroup>
+						<SummaryPercentTag $status={summary.status}>
+							{`${Math.round(summary.rawPercent)}%`}
+						</SummaryPercentTag>
+					</SummaryHeader>
+
+					<SummaryBar>
+						<SummaryFillBar $conclusionPercent={summary.percent} $status={summary.status} />
+					</SummaryBar>
+
+					<SummaryFooter>
+						<SummaryFooterItem>
+							<SummaryLabel>Utilizado</SummaryLabel>
+							<SummaryValue>{currencyFormatter.format(summary.totalUsed)}</SummaryValue>
+						</SummaryFooterItem>
+						<SummaryFooterItem $align="right">
+							<SummaryLabel>Disponível</SummaryLabel>
+							<SummaryValue $tone={summary.status}>
+								{currencyFormatter.format(summary.totalAvailable)}
+							</SummaryValue>
+						</SummaryFooterItem>
+					</SummaryFooter>
 				</SummaryCard>
 
 				<PageHeader>

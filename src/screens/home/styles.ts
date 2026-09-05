@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { breakpoints, contentMaxWidth } from '../../theme/theme';
+import type { StatusLevel } from '../../componentes/card/styles';
 
 export const Container = styled.div`
 	display: flex;
@@ -34,6 +35,8 @@ export const Title = styled.h1`
 	font-size: 22px;
 	color: ${({ theme }) => theme.colors.textPrimary};
 	font-weight: ${({ theme }) => theme.fontsWeight.bold};
+	margin-top: 16px;
+	margin-bottom: -12px;
 `;
 
 export const Toolbar = styled.div`
@@ -49,46 +52,117 @@ export const Toolbar = styled.div`
 
 export const SummaryCard = styled.section`
 	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 6px;
+	flex-direction: column;
+	gap: ${({ theme }) => theme.spacing.sm};
 	background-color: ${({ theme }) => theme.colors.surface};
 	border: 1px solid ${({ theme }) => theme.colors.border};
-	border-radius: ${({ theme }) => theme.radius.md};
-	padding: 12px ${({ theme }) => theme.spacing.md};
+	border-radius: ${({ theme }) => theme.radius.lg};
+	padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.lg};
 	margin-bottom: ${({ theme }) => theme.spacing.lg};
+	box-shadow: 0 1px 2px ${({ theme }) => theme.colors.shadow};
 `;
 
-export const SummaryItem = styled.div`
+export const SummaryHeader = styled.div`
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: ${({ theme }) => theme.spacing.sm};
+`;
+
+export const SummaryTitleGroup = styled.div`
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	min-width: 0;
+`;
+
+export const SummaryIconBadge = styled.div<{ $status: StatusLevel }>`
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 30px;
+	height: 30px;
+	flex-shrink: 0;
+	border-radius: ${({ theme }) => theme.radius.md};
+	background-color: ${({ theme, $status }) => theme.colors[`${$status}Muted`]};
+	color: ${({ theme, $status }) => theme.colors[$status]};
+`;
+
+export const SummaryHeaderText = styled.div`
 	display: flex;
 	flex-direction: column;
 	gap: 2px;
 	min-width: 0;
-
-	& + & {
-		border-left: 1px solid ${({ theme }) => theme.colors.border};
-		padding-left: ${({ theme }) => theme.spacing.md};
-	}
 `;
 
 export const SummaryLabel = styled.span`
 	font-size: 11px;
 	color: ${({ theme }) => theme.colors.textTertiary};
 	font-weight: ${({ theme }) => theme.fontsWeight.medium};
-	white-space: nowrap;
 `;
 
-export const SummaryValue = styled.span<{ $tone?: 'primary' | 'success' | 'danger' }>`
-	font-size: 15px;
+export const SummaryTotalValue = styled.span`
+	font-size: 17px;
+	font-weight: ${({ theme }) => theme.fontsWeight.extraBold};
+	font-variant-numeric: tabular-nums;
+	color: ${({ theme }) => theme.colors.textPrimary};
+	line-height: 1.2;
+
+	@media (min-width: ${breakpoints.tablet}) {
+		font-size: 19px;
+	}
+`;
+
+export const SummaryPercentTag = styled.span<{ $status: StatusLevel }>`
+	flex-shrink: 0;
+	font-size: 12px;
+	font-weight: ${({ theme }) => theme.fontsWeight.semiBold};
+	padding: 4px 10px;
+	border-radius: ${({ theme }) => theme.radius.pill};
+	background-color: ${({ theme, $status }) => theme.colors[`${$status}Muted`]};
+	color: ${({ theme, $status }) => theme.colors[$status]};
+`;
+
+export const SummaryBar = styled.div`
+	position: relative;
+	background-color: ${({ theme }) => theme.colors.surfaceAlt};
+	width: 100%;
+	height: 6px;
+	border-radius: ${({ theme }) => theme.radius.pill};
+	overflow: hidden;
+`;
+
+export const SummaryFillBar = styled.div<{ $conclusionPercent: number; $status: StatusLevel }>`
+	height: 100%;
+	width: ${(props) => props.$conclusionPercent}%;
+	border-radius: ${({ theme }) => theme.radius.pill};
+	background-color: ${({ theme, $status }) => theme.colors[$status]};
+	transition: width 0.3s ease;
+`;
+
+export const SummaryFooter = styled.div`
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: ${({ theme }) => theme.spacing.sm};
+`;
+
+export const SummaryFooterItem = styled.div<{ $align?: 'left' | 'right' }>`
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	min-width: 0;
+	text-align: ${({ $align }) => $align ?? 'left'};
+`;
+
+export const SummaryValue = styled.span<{ $tone?: StatusLevel }>`
+	font-size: 14px;
 	font-weight: ${({ theme }) => theme.fontsWeight.bold};
 	font-variant-numeric: tabular-nums;
 	color: ${({ theme, $tone }) => ($tone ? theme.colors[$tone] : theme.colors.textPrimary)};
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
 
 	@media (min-width: ${breakpoints.tablet}) {
-		font-size: 16px;
+		font-size: 15px;
 	}
 `;
 
