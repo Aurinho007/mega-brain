@@ -91,11 +91,11 @@ const Card = (props: CardProps) => {
 	};
 
 	return (
-		<Container>
+		<Container onClick={() => setShowMenu((prev) => !prev)}>
 			<Header>
 				<Title>{name}</Title>
 				<div ref={menuRef} style={{ position: 'relative' }}>
-					<Menu onClick={() => setShowMenu((prev) => !prev)}>...</Menu>
+					<Menu>...</Menu>
 					{showMenu && (
 						<ActionMenu>
 							<ActionOption
