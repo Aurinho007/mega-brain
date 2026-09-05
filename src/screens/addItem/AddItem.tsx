@@ -34,14 +34,25 @@ const AddItem = ({ show, setShow, setRefresh }: AddItemProps) => {
 
 	const handleTotalChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const onlyNumbers = event.target.value.replace(/\D/g, '');
-		setTotal(onlyNumbers);
+
+		if (!onlyNumbers) {
+			setTotal('');
+			return;
+		}
+
+		setTotal(
+			(Number(onlyNumbers) / 100).toLocaleString('pt-BR', {
+				minimumFractionDigits: 2,
+				maximumFractionDigits: 2,
+			})
+		);
 	};
 
 	const handlePressAddItem = () => {
 		const newItem: ICard = {
 			id: uuidv4(),
 			name: name.trim(),
-			total: Number(total),
+			total: Number(total.replace(/\./g, '').replace(',', '.')),
 			used: 0,
 		};
 

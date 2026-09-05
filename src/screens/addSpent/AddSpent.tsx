@@ -35,7 +35,18 @@ const AddSpent = ({ show, setShow, setRefresh }: AddSpentProps) => {
 
 	const handleValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const onlyNumbers = event.target.value.replace(/\D/g, '');
-		setValue(onlyNumbers);
+
+		if (!onlyNumbers) {
+			setValue('');
+			return;
+		}
+
+		setValue(
+			(Number(onlyNumbers) / 100).toLocaleString('pt-BR', {
+				minimumFractionDigits: 2,
+				maximumFractionDigits: 2,
+			})
+		);
 	};
 
 	const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -48,7 +59,7 @@ const AddSpent = ({ show, setShow, setRefresh }: AddSpentProps) => {
 			return;
 		}
 
-		const updated = Service.editItem(categoryId, Number(value));
+		const updated = Service.editItem(categoryId, Number(value.replace(/\./g, '').replace(',', '.')));
 		setRefresh(true);
 		setShow(false);
 		setValue('');
