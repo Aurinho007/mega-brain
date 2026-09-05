@@ -1,69 +1,60 @@
 import styled from 'styled-components';
-import { colors, fontsWeight } from '../../constants';
+import { contentMaxWidth } from '../../theme/theme';
 
-export const Container = styled.div`
-	background-color: ${colors.primary};
-	display: flex;
-	position: fixed;
-	left: 0;
-	right: 0;
+export const Container = styled.header`
+	position: sticky;
 	top: 0;
-	width: 100%;
-	height: 105px;
-	z-index: 99;
-
-	&::after {
-		content: '';
-
-		position: absolute;
-		bottom: -1px;
-		left: 0;
-
-		width: 100%;
-		height: 20px;
-
-		background-color: ${colors.default};
-
-		border-top-left-radius: 50px;
-		border-top-right-radius: 50px;
-	}
+	z-index: 90;
+	background-color: ${({ theme }) => theme.colors.surface};
+	border-bottom: 1px solid ${({ theme }) => theme.colors.border};
 `;
 
 export const Content = styled.div`
 	display: flex;
-	padding: 12px 25px;
-`;
-
-export const LogoContainer = styled.div`
-	display: flex;
-	background-color: ${colors.default};
-	border-radius: 100px;
-	width: 50px;
-	height: 50px;
 	align-items: center;
-	justify-content: center;
-	border: solid 2px ${colors.secondary};
+	justify-content: space-between;
+	gap: ${({ theme }) => theme.spacing.md};
+	max-width: ${contentMaxWidth};
+	margin: 0 auto;
+	padding: 14px ${({ theme }) => theme.spacing.lg};
 `;
 
-export const Logo = styled.img`
-	width: 35px;
-	height: 35px;
+export const BrandGroup = styled.div`
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	min-width: 0;
 `;
 
 export const TitleContainer = styled.div`
 	display: flex;
 	flex-direction: column;
 	text-align: left;
-	padding-left: 15px;
-	padding-top: 6px;
+	min-width: 0;
 `;
 
-export const Title = styled.text`
-	font-size: 23px;
-	font-weight: ${fontsWeight.black};
-`;
-
-export const SubTitle = styled.text`
+export const Title = styled.p`
 	font-size: 18px;
-	font-weight: ${fontsWeight.light};
+	line-height: 1.2;
+	color: ${({ theme }) => theme.colors.textPrimary};
+	font-weight: ${({ theme }) => theme.fontsWeight.bold};
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+`;
+
+export const SubTitle = styled.p`
+	font-size: 13px;
+	color: ${({ theme }) => theme.colors.textSecondary};
+	font-weight: ${({ theme }) => theme.fontsWeight.regular};
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+`;
+
+export const Actions = styled.div`
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-shrink: 0;
 `;

@@ -7,21 +7,29 @@ import {
 } from 'react';
 import Service from '../../service';
 import { ICard } from '../../types';
+import { MoreIcon, ReceiptIcon, ResetIcon, TrashIcon } from '../icons/Icons';
 import {
 	ActionMenu,
 	ActionOption,
 	Bar,
 	Container,
 	FillBar,
+	Footer,
 	Header,
+	IconBadge,
 	Label,
 	Legend,
 	Line,
-	Menu,
+	MenuButton,
+	MenuWrapper,
+	PercentTag,
+	StatusLevel,
 	Title,
+	TitleGroup,
 	Value,
 	ValueContinerLeft,
 	ValueContinerRight,
+	ValueHighlight,
 } from './styles';
 
 type CardProps = {
@@ -30,20 +38,26 @@ type CardProps = {
 	setShowAddSpent: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
+const currencyFormatter = new Intl.NumberFormat('pt-BR', {
+	style: 'currency',
+	currency: 'BRL',
+	minimumFractionDigits: 2,
+	maximumFractionDigits: 2,
+});
+
+const getStatus = (percent: number): StatusLevel => {
+	if (percent >= 100) return 'danger';
+	if (percent >= 75) return 'warning';
+	return 'success';
+};
+
 const Card = (props: CardProps) => {
 	const { id, name, total, used } = props.card;
 	const { setRefresh, setShowAddSpent } = props;
 	const [showMenu, setShowMenu] = useState(false);
 	const menuRef = useRef<HTMLDivElement>(null);
 
-	const formatValue = useCallback((value: number) => {
-		return new Intl.NumberFormat('pt-BR', {
-			style: 'currency',
-			currency: 'BRL',
-			minimumFractionDigits: 2,
-			maximumFractionDigits: 2,
-		}).format(value);
-	}, []);
+	const formatValue = useCallback((value: number) => currencyFormatter.format(value), []);
 
 	useEffect(() => {
 		if (!showMenu) return;
@@ -65,7 +79,9 @@ const Card = (props: CardProps) => {
 		event?.stopPropagation();
 		setShowMenu(false);
 
-		const confirmed = window.confirm('Deseja apagar este item?');
+		const confirmed = window.confirm(
+			`Excluir a categoria "${name}"? Essa ação não pode ser desfeita.`
+		);
 
 		if (confirmed) {
 			Service.deleteItem(id);
@@ -77,7 +93,9 @@ const Card = (props: CardProps) => {
 		event?.stopPropagation();
 		setShowMenu(false);
 
-		const confirmed = window.confirm('Deseja reiniciar este item?');
+		const confirmed = window.confirm(
+			`Reiniciar os gastos de "${name}"? O valor utilizado voltará para R$ 0,00.`
+		);
 
 		if (confirmed) {
 			Service.resetItem(id);
@@ -85,61 +103,67 @@ const Card = (props: CardProps) => {
 		}
 	};
 
-	const getPercent = () => {
-		const percent = (used / total) * 100;
-
-		if (percent > 100) return 100;
-
-		return percent;
-	};
+	const rawPercent = total > 0 ? (used / total) * 100 : 0;
+	const percent = Math.min(Math.max(rawPercent, 0), 100);
+	const status = getStatus(rawPercent);
 
 	return (
-		<Container onClick={() => setShowMenu((prev) => !prev)}>
+		<Container>
 			<Header>
-				<Title>{name}</Title>
-				<div ref={menuRef} style={{ position: 'relative' }}>
-					<Menu>...</Menu>
+				<TitleGroup>
+					<IconBadge $status={status}>
+						<ReceiptIcon size={16} />
+					</IconBadge>
+					<Title>{name}</Title>
+				</TitleGroup>
+				<MenuWrapper ref={menuRef}>
+					<MenuButton
+						type="button"
+						onClick={() => setShowMenu((prev) => !prev)}
+						aria-haspopup="menu"
+						aria-expanded={showMenu}
+						aria-label={`Mais opções de ${name}`}
+					>
+						<MoreIcon size={18} />
+					</MenuButton>
 					{showMenu && (
-						<ActionMenu>
-							<ActionOption
-								onClick={(event) => {
-									setShowAddSpent(true);
-								}}
-							>
+						<ActionMenu role="menu">
+							<ActionOption role="menuitem" onClick={() => setShowAddSpent(true)}>
+								<ReceiptIcon size={15} />
 								Novo gasto
 							</ActionOption>
-							<ActionOption
-								onClick={(event) => {
-									handleDelete(event);
-								}}
-							>
-								Apagar
+							<ActionOption role="menuitem" onClick={handleRestart}>
+								<ResetIcon size={15} />
+								Reiniciar gastos
 							</ActionOption>
-							<ActionOption
-								onClick={(event) => {
-									handleRestart(event);
-								}}
-							>
-								Reiniciar
+							<ActionOption role="menuitem" $danger onClick={handleDelete}>
+								<TrashIcon size={15} />
+								Excluir categoria
 							</ActionOption>
 						</ActionMenu>
 					)}
-				</div>
+				</MenuWrapper>
 			</Header>
+
 			<Line>
 				<ValueContinerLeft>
 					<Value>{formatValue(used)}</Value>
 					<Label>Utilizado</Label>
 				</ValueContinerLeft>
 				<ValueContinerRight>
-					<Value>{formatValue(total - used)}</Value>
+					<ValueHighlight $status={status}>{formatValue(Math.max(total - used, 0))}</ValueHighlight>
 					<Label>Disponível</Label>
 				</ValueContinerRight>
 			</Line>
+
 			<Bar>
-				<FillBar conclusionPercent={getPercent()}></FillBar>
+				<FillBar $conclusionPercent={percent} $status={status} />
 			</Bar>
-			<Legend>{`Total: ${formatValue(total)}`}</Legend>
+
+			<Footer>
+				<Legend>{`Limite: ${formatValue(total)}`}</Legend>
+				<PercentTag $status={status}>{`${Math.round(rawPercent)}%`}</PercentTag>
+			</Footer>
 		</Container>
 	);
 };

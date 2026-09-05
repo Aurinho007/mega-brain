@@ -1,15 +1,13 @@
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import Button from '../../componentes/button/Button';
+import Modal from '../../componentes/modal/Modal';
 import {
 	ButtonGroup,
-	Container,
-	Content,
 	FormItem,
 	FormItemContainer,
 	FormItemLabel,
-	Title,
-} from './styles';
+} from '../../componentes/formField/styles';
 import { ICard } from '../../types';
 import Service from '../../service';
 
@@ -49,17 +47,17 @@ const AddItem = ({ show, setShow, setRefresh }: AddItemProps) => {
 	};
 
 	const handlePressAddItem = () => {
+		if (!name || !total) {
+			alert('Preencha o nome e o limite mensal da categoria.');
+			return;
+		}
+
 		const newItem: ICard = {
 			id: uuidv4(),
 			name: name.trim(),
 			total: Number(total.replace(/\./g, '').replace(',', '.')),
 			used: 0,
 		};
-
-		if (!name || !total) {
-			alert('Preencha todos os campos');
-			return;
-		}
 
 		const addedItem = Service.createItem(newItem);
 		setRefresh(true);
@@ -68,11 +66,8 @@ const AddItem = ({ show, setShow, setRefresh }: AddItemProps) => {
 		setTotal('');
 
 		if (!addedItem) {
-			alert('Essa categoria já existe');
-			return;
+			alert('Já existe uma categoria com esse nome.');
 		}
-
-		// TODO alerta de sucesso
 	};
 
 	const handlePressGoBack = () => {
@@ -82,26 +77,35 @@ const AddItem = ({ show, setShow, setRefresh }: AddItemProps) => {
 	};
 
 	return (
-		<Container $show={show} onClick={handlePressGoBack}>
-			<Content $show={show} onClick={(event) => event.stopPropagation()}>
-				<Title>Adicionar categoria</Title>
+		<Modal show={show} onClose={handlePressGoBack} title="Nova categoria">
+			<FormItemContainer>
+				<FormItemLabel htmlFor="item-name">Nome da categoria</FormItemLabel>
+				<FormItem
+					id="item-name"
+					value={name}
+					onChange={handleNameChange}
+					placeholder="Ex: Mercado, Lazer, Transporte..."
+					autoComplete="off"
+				/>
+			</FormItemContainer>
 
-				<FormItemContainer>
-					<FormItemLabel>Nome</FormItemLabel>
-					<FormItem value={name} onChange={handleNameChange} />
-				</FormItemContainer>
+			<FormItemContainer>
+				<FormItemLabel htmlFor="item-total">Limite mensal (R$)</FormItemLabel>
+				<FormItem
+					id="item-total"
+					value={total}
+					onChange={handleTotalChange}
+					type="tel"
+					inputMode="numeric"
+					placeholder="0,00"
+				/>
+			</FormItemContainer>
 
-				<FormItemContainer>
-					<FormItemLabel>Valor do limite mensal (R$)</FormItemLabel>
-					<FormItem value={total} onChange={handleTotalChange} type="tel" inputMode="numeric" />
-				</FormItemContainer>
-
-				<ButtonGroup>
-					<Button label="Voltar" type="secondary" onPress={handlePressGoBack} />
-					<Button label="Adicionar" type="primary" onPress={handlePressAddItem} />
-				</ButtonGroup>
-			</Content>
-		</Container>
+			<ButtonGroup>
+				<Button label="Cancelar" type="secondary" onPress={handlePressGoBack} />
+				<Button label="Criar categoria" type="primary" onPress={handlePressAddItem} />
+			</ButtonGroup>
+		</Modal>
 	);
 };
 

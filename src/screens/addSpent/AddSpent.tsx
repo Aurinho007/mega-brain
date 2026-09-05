@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
 import Button from '../../componentes/button/Button';
+import Modal from '../../componentes/modal/Modal';
 import {
 	ButtonGroup,
-	Container,
-	Content,
 	FormItem,
 	FormItemContainer,
 	FormItemLabel,
-	Title,
-} from '../addItem/styles';
+	Select,
+	SelectChevron,
+	SelectWrapper,
+} from '../../componentes/formField/styles';
+import { ChevronDownIcon } from '../../componentes/icons/Icons';
 import Service from '../../service';
 import { ICard } from '../../types';
 
@@ -54,8 +56,13 @@ const AddSpent = ({ show, setShow, setRefresh }: AddSpentProps) => {
 	};
 
 	const handlePressAddSpent = () => {
+		if (!value) {
+			alert('Informe o valor do gasto.');
+			return;
+		}
+
 		if (!categoryId) {
-			alert('Selecione uma categoria');
+			alert('Escolha uma categoria para continuar.');
 			return;
 		}
 
@@ -66,7 +73,7 @@ const AddSpent = ({ show, setShow, setRefresh }: AddSpentProps) => {
 		setCategoryId('');
 
 		if (!updated) {
-			alert('Não foi possível atualizar o gasto');
+			alert('Não foi possível registrar o gasto. Tente novamente.');
 		}
 	};
 
@@ -77,44 +84,40 @@ const AddSpent = ({ show, setShow, setRefresh }: AddSpentProps) => {
 	};
 
 	return (
-		<Container $show={show} onClick={handlePressGoBack}>
-			<Content $show={show} onClick={(event) => event.stopPropagation()}>
-				<Title>Adicionar gasto</Title>
+		<Modal show={show} onClose={handlePressGoBack} title="Novo gasto">
+			<FormItemContainer>
+				<FormItemLabel htmlFor="spent-value">Valor do gasto (R$)</FormItemLabel>
+				<FormItem
+					id="spent-value"
+					value={value}
+					onChange={handleValueChange}
+					type="tel"
+					inputMode="numeric"
+					placeholder="0,00"
+				/>
+			</FormItemContainer>
 
-				<FormItemContainer>
-					<FormItemLabel>Valor do gasto (R$)</FormItemLabel>
-					<FormItem value={value} onChange={handleValueChange} type="tel" inputMode="numeric" />
-				</FormItemContainer>
-
-				<FormItemContainer>
-					<FormItemLabel>Categoria</FormItemLabel>
-					<select
-						value={categoryId}
-						onChange={handleCategoryChange}
-						style={{
-							height: 45,
-							borderRadius: 30,
-							border: 'none',
-							backgroundColor: '#D0D4D8',
-							padding: '0 16px',
-							fontSize: 15,
-							fontWeight: 600,
-						}}
-					>
+			<FormItemContainer>
+				<FormItemLabel htmlFor="spent-category">Categoria</FormItemLabel>
+				<SelectWrapper>
+					<Select id="spent-category" value={categoryId} onChange={handleCategoryChange}>
 						{categories.map((category) => (
 							<option key={category.id} value={category.id}>
 								{category.name}
 							</option>
 						))}
-					</select>
-				</FormItemContainer>
+					</Select>
+					<SelectChevron>
+						<ChevronDownIcon size={16} />
+					</SelectChevron>
+				</SelectWrapper>
+			</FormItemContainer>
 
-				<ButtonGroup>
-					<Button label="Voltar" type="secondary" onPress={handlePressGoBack} />
-					<Button label="Adicionar" type="primary" onPress={handlePressAddSpent} />
-				</ButtonGroup>
-			</Content>
-		</Container>
+			<ButtonGroup>
+				<Button label="Cancelar" type="secondary" onPress={handlePressGoBack} />
+				<Button label="Registrar gasto" type="primary" onPress={handlePressAddSpent} />
+			</ButtonGroup>
+		</Modal>
 	);
 };
 
