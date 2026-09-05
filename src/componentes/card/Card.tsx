@@ -27,11 +27,12 @@ import {
 type CardProps = {
 	card: ICard;
 	setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+	setShowAddSpent: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const Card = (props: CardProps) => {
 	const { id, name, total, used } = props.card;
-	const { setRefresh } = props;
+	const { setRefresh, setShowAddSpent } = props;
 	const [showMenu, setShowMenu] = useState(false);
 	const menuRef = useRef<HTMLDivElement>(null);
 
@@ -98,6 +99,13 @@ const Card = (props: CardProps) => {
 					<Menu>...</Menu>
 					{showMenu && (
 						<ActionMenu>
+							<ActionOption
+								onClick={(event) => {
+									setShowAddSpent(true);
+								}}
+							>
+								Novo gasto
+							</ActionOption>
 							<ActionOption
 								onClick={(event) => {
 									handleDelete(event);

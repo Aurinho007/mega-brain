@@ -37,7 +37,7 @@ const Home = () => {
 				<Title>Meus Gastos</Title>
 				<Content>
 					{allCards.map((item) => {
-						return <Card card={item} setRefresh={setRefresh} />;
+						return <Card card={item} setRefresh={setRefresh} setShowAddSpent={setShowAddSpent} />;
 					})}
 				</Content>
 			</>
