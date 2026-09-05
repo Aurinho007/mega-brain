@@ -1,17 +1,21 @@
-import { Container, Content, Logo, LogoContainer, SubTitle, Title, TitleContainer } from './styles';
-import logoIcon from '../../../assets/images/logoIcon.png';
+import Logo from '../logo/Logo';
+import ThemeToggle from '../themeToggle/ThemeToggle';
+import { Actions, BrandGroup, Container, Content, SubTitle, Title, TitleContainer } from './styles';
 
 const Header = () => {
 	return (
 		<Container>
 			<Content>
-				<LogoContainer>
-					<Logo src={logoIcon} />
-				</LogoContainer>
-				<TitleContainer>
-					<Title>Mega Brain</Title>
-					<SubTitle>Seu gestor financeiro</SubTitle>
-				</TitleContainer>
+				<BrandGroup>
+					<Logo size={38} />
+					<TitleContainer>
+						<Title>Mega Brain</Title>
+						<SubTitle>Seu gestor financeiro</SubTitle>
+					</TitleContainer>
+				</BrandGroup>
+				<Actions>
+					<ThemeToggle />
+				</Actions>
 			</Content>
 		</Container>
 	);
