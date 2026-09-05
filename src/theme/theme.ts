@@ -81,7 +81,7 @@ export const lightTheme: AppTheme = {
 		surface: '#FFFFFF',
 		surfaceAlt: '#F1F2F7',
 		surfaceHover: '#EAECF3',
-		surfaceGlass: 'rgba(255, 255, 255, 0.82)',
+		surfaceGlass: 'rgba(255, 255, 255, 0.55)',
 		border: '#E3E5EE',
 		borderStrong: '#CDD1DF',
 
@@ -116,7 +116,7 @@ export const darkTheme: AppTheme = {
 		surface: '#181A22',
 		surfaceAlt: '#20222D',
 		surfaceHover: '#282B38',
-		surfaceGlass: 'rgba(24, 26, 34, 0.78)',
+		surfaceGlass: 'rgba(24, 26, 34, 0.5)',
 		border: '#2B2E3A',
 		borderStrong: '#3A3E4E',
 

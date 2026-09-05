@@ -35,6 +35,26 @@ class Service {
 		return true;
 	};
 
+	static updateItem = (id: string, updates: { name: string; total: number }): boolean => {
+		const categories = this.getAllItens();
+		const index = categories.findIndex((item) => item.id === id);
+
+		if (index === -1) {
+			return false;
+		}
+
+		const duplicate = categories.some((item) => item.id !== id && item.name === updates.name);
+
+		if (duplicate) {
+			return false;
+		}
+
+		categories[index] = { ...categories[index], name: updates.name, total: updates.total };
+		this._setAllItens(categories);
+
+		return true;
+	};
+
 	static createItem = (item: ICard): boolean => {
 		const categories = this.getAllItens();
 		const index = categories.findIndex((i) => i.name === item.name);

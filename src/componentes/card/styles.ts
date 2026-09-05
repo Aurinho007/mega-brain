@@ -13,11 +13,18 @@ export const Container = styled.div`
 	border-radius: ${({ theme }) => theme.radius.lg};
 	padding: ${({ theme }) => theme.spacing.lg};
 	box-shadow: 0 1px 2px ${({ theme }) => theme.colors.shadow};
+	cursor: pointer;
+	-webkit-tap-highlight-color: transparent;
 	transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
 
 	&:hover {
 		border-color: ${({ theme }) => theme.colors.borderStrong};
 		box-shadow: 0 6px 20px ${({ theme }) => theme.colors.shadow};
+	}
+
+	&:focus,
+	&:focus-visible {
+		outline: none;
 	}
 `;
 

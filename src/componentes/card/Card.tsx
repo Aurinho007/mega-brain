@@ -7,7 +7,8 @@ import {
 } from 'react';
 import Service from '../../service';
 import { ICard } from '../../types';
-import { MoreIcon, ReceiptIcon, ResetIcon, TrashIcon } from '../icons/Icons';
+import { EditIcon, MoreIcon, ReceiptIcon, ResetIcon, TrashIcon } from '../icons/Icons';
+import { useToast } from '../toast/ToastContext';
 import {
 	ActionMenu,
 	ActionOption,
@@ -36,6 +37,7 @@ type CardProps = {
 	card: ICard;
 	setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 	setShowAddSpent: React.Dispatch<React.SetStateAction<boolean>>;
+	onEdit: (card: ICard) => void;
 };
 
 const currencyFormatter = new Intl.NumberFormat('pt-BR', {
@@ -53,9 +55,10 @@ export const getStatus = (percent: number): StatusLevel => {
 
 const Card = (props: CardProps) => {
 	const { id, name, total, used } = props.card;
-	const { setRefresh, setShowAddSpent } = props;
+	const { setRefresh, setShowAddSpent, onEdit } = props;
 	const [showMenu, setShowMenu] = useState(false);
-	const menuRef = useRef<HTMLDivElement>(null);
+	const cardRef = useRef<HTMLDivElement>(null);
+	const { showToast } = useToast();
 
 	const formatValue = useCallback((value: number) => currencyFormatter.format(value), []);
 
@@ -63,7 +66,7 @@ const Card = (props: CardProps) => {
 		if (!showMenu) return;
 
 		const handleClickOutside = (event: MouseEvent) => {
-			if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+			if (cardRef.current && !cardRef.current.contains(event.target as Node)) {
 				setShowMenu(false);
 			}
 		};
@@ -75,6 +78,23 @@ const Card = (props: CardProps) => {
 		};
 	}, [showMenu]);
 
+	const handleToggleMenu = (event?: ReactMouseEvent<HTMLButtonElement | HTMLDivElement>) => {
+		event?.stopPropagation();
+		setShowMenu((prev) => !prev);
+	};
+
+	const handleCardKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+		if (event.key !== 'Enter' && event.key !== ' ') return;
+		event.preventDefault();
+		setShowMenu((prev) => !prev);
+	};
+
+	const handleAddSpent = (event?: ReactMouseEvent<HTMLButtonElement>) => {
+		event?.stopPropagation();
+		setShowMenu(false);
+		setShowAddSpent(true);
+	};
+
 	const handleDelete = (event?: ReactMouseEvent<HTMLButtonElement>) => {
 		event?.stopPropagation();
 		setShowMenu(false);
@@ -84,9 +104,21 @@ const Card = (props: CardProps) => {
 		);
 
 		if (confirmed) {
-			Service.deleteItem(id);
+			const deleted = Service.deleteItem(id);
 			setRefresh(true);
+
+			if (deleted) {
+				showToast('Categoria excluída com sucesso.');
+			} else {
+				showToast('Não foi possível excluir a categoria.', 'danger');
+			}
 		}
+	};
+
+	const handleEdit = (event?: ReactMouseEvent<HTMLButtonElement>) => {
+		event?.stopPropagation();
+		setShowMenu(false);
+		onEdit(props.card);
 	};
 
 	const handleRestart = (event?: ReactMouseEvent<HTMLButtonElement>) => {
@@ -98,8 +130,14 @@ const Card = (props: CardProps) => {
 		);
 
 		if (confirmed) {
-			Service.resetItem(id);
+			const reseted = Service.resetItem(id);
 			setRefresh(true);
+
+			if (reseted) {
+				showToast('Gastos reiniciados com sucesso.');
+			} else {
+				showToast('Não foi possível reiniciar os gastos.', 'danger');
+			}
 		}
 	};
 
@@ -108,7 +146,7 @@ const Card = (props: CardProps) => {
 	const status = getStatus(rawPercent);
 
 	return (
-		<Container>
+		<Container ref={cardRef} onClick={handleToggleMenu} onKeyDown={handleCardKeyDown} tabIndex={0}>
 			<Header>
 				<TitleGroup>
 					<IconBadge $status={status}>
@@ -116,10 +154,10 @@ const Card = (props: CardProps) => {
 					</IconBadge>
 					<Title>{name}</Title>
 				</TitleGroup>
-				<MenuWrapper ref={menuRef}>
+				<MenuWrapper>
 					<MenuButton
 						type="button"
-						onClick={() => setShowMenu((prev) => !prev)}
+						onClick={handleToggleMenu}
 						aria-haspopup="menu"
 						aria-expanded={showMenu}
 						aria-label={`Mais opções de ${name}`}
@@ -128,9 +166,13 @@ const Card = (props: CardProps) => {
 					</MenuButton>
 					{showMenu && (
 						<ActionMenu role="menu">
-							<ActionOption role="menuitem" onClick={() => setShowAddSpent(true)}>
+							<ActionOption role="menuitem" onClick={handleAddSpent}>
 								<ReceiptIcon size={15} />
 								Novo gasto
+							</ActionOption>
+							<ActionOption role="menuitem" onClick={handleEdit}>
+								<EditIcon size={15} />
+								Editar categoria
 							</ActionOption>
 							<ActionOption role="menuitem" onClick={handleRestart}>
 								<ResetIcon size={15} />

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import Button from '../../componentes/button/Button';
 import Modal from '../../componentes/modal/Modal';
@@ -10,16 +10,32 @@ import {
 } from '../../componentes/formField/styles';
 import { ICard } from '../../types';
 import Service from '../../service';
+import { useToast } from '../../componentes/toast/ToastContext';
 
 type AddItemProps = {
 	show: boolean;
 	setShow: React.Dispatch<React.SetStateAction<boolean>>;
 	setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+	editingItem?: ICard | null;
 };
 
-const AddItem = ({ show, setShow, setRefresh }: AddItemProps) => {
+const AddItem = ({ show, setShow, setRefresh, editingItem = null }: AddItemProps) => {
 	const [name, setName] = useState<string>('');
 	const [total, setTotal] = useState<string>('');
+	const isEditing = Boolean(editingItem);
+	const { showToast } = useToast();
+
+	useEffect(() => {
+		if (!show) return;
+
+		if (editingItem) {
+			setName(editingItem.name);
+			setTotal(editingItem.total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+		} else {
+			setName('');
+			setTotal('');
+		}
+	}, [show, editingItem]);
 
 	const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const rawValue = event.target.value;
@@ -48,14 +64,29 @@ const AddItem = ({ show, setShow, setRefresh }: AddItemProps) => {
 
 	const handlePressAddItem = () => {
 		if (!name || !total) {
-			alert('Preencha o nome e o limite mensal da categoria.');
+			showToast('Preencha o nome e o limite mensal da categoria.', 'danger');
+			return;
+		}
+
+		const totalNumber = Number(total.replace(/\./g, '').replace(',', '.'));
+
+		if (editingItem) {
+			const updated = Service.updateItem(editingItem.id, { name: name.trim(), total: totalNumber });
+			setRefresh(true);
+			setShow(false);
+
+			if (updated) {
+				showToast('Categoria atualizada com sucesso.');
+			} else {
+				showToast('Já existe uma categoria com esse nome.', 'danger');
+			}
 			return;
 		}
 
 		const newItem: ICard = {
 			id: uuidv4(),
 			name: name.trim(),
-			total: Number(total.replace(/\./g, '').replace(',', '.')),
+			total: totalNumber,
 			used: 0,
 		};
 
@@ -65,8 +96,10 @@ const AddItem = ({ show, setShow, setRefresh }: AddItemProps) => {
 		setName('');
 		setTotal('');
 
-		if (!addedItem) {
-			alert('Já existe uma categoria com esse nome.');
+		if (addedItem) {
+			showToast('Categoria criada com sucesso.');
+		} else {
+			showToast('Já existe uma categoria com esse nome.', 'danger');
 		}
 	};
 
@@ -77,7 +110,7 @@ const AddItem = ({ show, setShow, setRefresh }: AddItemProps) => {
 	};
 
 	return (
-		<Modal show={show} onClose={handlePressGoBack} title="Nova categoria">
+		<Modal show={show} onClose={handlePressGoBack} title={isEditing ? 'Editar categoria' : 'Nova categoria'}>
 			<FormItemContainer>
 				<FormItemLabel htmlFor="item-name">Nome da categoria</FormItemLabel>
 				<FormItem
@@ -103,7 +136,11 @@ const AddItem = ({ show, setShow, setRefresh }: AddItemProps) => {
 
 			<ButtonGroup>
 				<Button label="Cancelar" type="secondary" onPress={handlePressGoBack} />
-				<Button label="Criar categoria" type="primary" onPress={handlePressAddItem} />
+				<Button
+					label={isEditing ? 'Salvar alterações' : 'Criar categoria'}
+					type="primary"
+					onPress={handlePressAddItem}
+				/>
 			</ButtonGroup>
 		</Modal>
 	);

@@ -13,6 +13,7 @@ import {
 import { ChevronDownIcon } from '../../componentes/icons/Icons';
 import Service from '../../service';
 import { ICard } from '../../types';
+import { useToast } from '../../componentes/toast/ToastContext';
 
 type AddSpentProps = {
 	show: boolean;
@@ -24,15 +25,13 @@ const AddSpent = ({ show, setShow, setRefresh }: AddSpentProps) => {
 	const [value, setValue] = useState<string>('');
 	const [categoryId, setCategoryId] = useState<string>('');
 	const [categories, setCategories] = useState<ICard[]>([]);
+	const { showToast } = useToast();
 
 	useEffect(() => {
 		if (!show) return;
 
-		const allCategories = Service.getAllItens();
-		setCategories(allCategories);
-		if (allCategories.length > 0) {
-			setCategoryId(allCategories[0].id);
-		}
+		setCategories(Service.getAllItens());
+		setCategoryId('');
 	}, [show]);
 
 	const handleValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,12 +56,12 @@ const AddSpent = ({ show, setShow, setRefresh }: AddSpentProps) => {
 
 	const handlePressAddSpent = () => {
 		if (!value) {
-			alert('Informe o valor do gasto.');
+			showToast('Informe o valor do gasto.', 'danger');
 			return;
 		}
 
 		if (!categoryId) {
-			alert('Escolha uma categoria para continuar.');
+			showToast('Escolha uma categoria para continuar.', 'danger');
 			return;
 		}
 
@@ -72,8 +71,10 @@ const AddSpent = ({ show, setShow, setRefresh }: AddSpentProps) => {
 		setValue('');
 		setCategoryId('');
 
-		if (!updated) {
-			alert('Não foi possível registrar o gasto. Tente novamente.');
+		if (updated) {
+			showToast('Gasto registrado com sucesso.');
+		} else {
+			showToast('Não foi possível registrar o gasto. Tente novamente.', 'danger');
 		}
 	};
 
@@ -101,6 +102,9 @@ const AddSpent = ({ show, setShow, setRefresh }: AddSpentProps) => {
 				<FormItemLabel htmlFor="spent-category">Categoria</FormItemLabel>
 				<SelectWrapper>
 					<Select id="spent-category" value={categoryId} onChange={handleCategoryChange}>
+						<option value="" disabled>
+							Selecione a categoria
+						</option>
 						{categories.map((category) => (
 							<option key={category.id} value={category.id}>
 								{category.name}

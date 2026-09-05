@@ -44,6 +44,13 @@ export const Toolbar = styled.div`
 	align-items: center;
 	gap: 10px;
 	flex-shrink: 0;
+	padding: 6px;
+	border-radius: ${({ theme }) => theme.radius.lg};
+	background-color: ${({ theme }) => theme.colors.surfaceGlass};
+	border: 1px solid ${({ theme }) => theme.colors.borderStrong};
+	backdrop-filter: blur(20px) saturate(180%);
+	-webkit-backdrop-filter: blur(20px) saturate(180%);
+	box-shadow: 0 8px 24px ${({ theme }) => theme.colors.shadow};
 
 	@media (min-width: ${breakpoints.tablet}) {
 		display: flex;

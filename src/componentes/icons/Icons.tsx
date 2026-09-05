@@ -86,6 +86,18 @@ export const ResetIcon = ({ size = 18, color = 'currentColor', strokeWidth = 1.8
 	</svg>
 );
 
+export const EditIcon = ({ size = 18, color = 'currentColor', strokeWidth = 1.8 }: IconProps) => (
+	<svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+		<path
+			d="M15.7 4.3a1.9 1.9 0 0 1 2.7 0l1.3 1.3a1.9 1.9 0 0 1 0 2.7L8.9 19.1l-4.4.9.9-4.4L15.7 4.3Z"
+			stroke={color}
+			strokeWidth={strokeWidth}
+			strokeLinejoin="round"
+		/>
+		<line x1="14" y1="6" x2="18" y2="10" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" />
+	</svg>
+);
+
 export const ReceiptIcon = ({ size = 18, color = 'currentColor', strokeWidth = 1.8 }: IconProps) => (
 	<svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 		<path
@@ -132,5 +144,18 @@ export const AlertIcon = ({ size = 16, color = 'currentColor', strokeWidth = 2 }
 		<circle cx="12" cy="12" r="9" stroke={color} strokeWidth={strokeWidth} />
 		<line x1="12" y1="7.5" x2="12" y2="13" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" />
 		<circle cx="12" cy="16.3" r="1" fill={color} />
+	</svg>
+);
+
+export const CheckIcon = ({ size = 16, color = 'currentColor', strokeWidth = 2 }: IconProps) => (
+	<svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+		<circle cx="12" cy="12" r="9" stroke={color} strokeWidth={strokeWidth} />
+		<path
+			d="M8 12.3l2.5 2.5L16 9.3"
+			stroke={color}
+			strokeWidth={strokeWidth}
+			strokeLinecap="round"
+			strokeLinejoin="round"
+		/>
 	</svg>
 );

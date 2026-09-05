@@ -44,6 +44,7 @@ const Home = () => {
 
 	const [showAddItem, setShowAddItem] = useState<boolean>(false);
 	const [showAddSpent, setShowAddSpent] = useState<boolean>(false);
+	const [editingItem, setEditingItem] = useState<ICard | null>(null);
 
 	useEffect(() => {
 		setAllCards(Service.getAllItens());
@@ -73,9 +74,19 @@ const Home = () => {
 
 	const hasCards = allCards.length > 0;
 
+	const openAddItem: React.Dispatch<React.SetStateAction<boolean>> = (value) => {
+		setEditingItem(null);
+		setShowAddItem(value);
+	};
+
+	const openEditItem = (card: ICard) => {
+		setEditingItem(card);
+		setShowAddItem(true);
+	};
+
 	const renderContent = () => {
 		if (!hasCards) {
-			return <EmptyList onAddCategory={() => setShowAddItem(true)} />;
+			return <EmptyList onAddCategory={() => openAddItem(true)} />;
 		}
 
 		return (
@@ -122,7 +133,7 @@ const Home = () => {
 							type="secondary"
 							fullWidth={false}
 							icon={<PlusIcon size={17} />}
-							onPress={() => setShowAddItem(true)}
+							onPress={() => openAddItem(true)}
 						/>
 						<Button
 							label="Novo gasto"
@@ -136,7 +147,13 @@ const Home = () => {
 
 				<CardGrid>
 					{allCards.map((item) => (
-						<Card key={item.id} card={item} setRefresh={setRefresh} setShowAddSpent={setShowAddSpent} />
+						<Card
+							key={item.id}
+							card={item}
+							setRefresh={setRefresh}
+							setShowAddSpent={setShowAddSpent}
+							onEdit={openEditItem}
+						/>
 					))}
 				</CardGrid>
 			</>
@@ -147,8 +164,13 @@ const Home = () => {
 		<Container>
 			<Header />
 			<Content>{renderContent()}</Content>
-			<Footer setShowAddItem={setShowAddItem} setShowAddSpent={setShowAddSpent} />
-			<AddItem show={showAddItem} setShow={setShowAddItem} setRefresh={setRefresh} />
+			<Footer setShowAddItem={openAddItem} setShowAddSpent={setShowAddSpent} />
+			<AddItem
+				show={showAddItem}
+				setShow={setShowAddItem}
+				setRefresh={setRefresh}
+				editingItem={editingItem}
+			/>
 			<AddSpent show={showAddSpent} setShow={setShowAddSpent} setRefresh={setRefresh} />
 		</Container>
 	);
